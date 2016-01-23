@@ -24,4 +24,12 @@ var app = http.createServer(function(req, res) {
 	
 }).listen(process.env.PORT || 3000);
 
+var io = require('socket.io').listen(app);
+io.sockets.on('connection', function(socket) {
+  socket.on('msg', function(data) {
+    //io.sockets.emit('msg', data);
+	socket.broadcast.emit('msg', data);
+  });
+});
+
 console.log('Server running!');

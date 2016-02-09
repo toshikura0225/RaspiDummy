@@ -18,12 +18,55 @@
 	<script type="text/javascript">
 		var socket;
 		$(function() {
-			socket = io.connect();
-			socket.on('msg', function(data) {
-				$('#idReceived').prepend(data + '<br>');
-			});
+
 		});
 		
+		// ①RKSに接続
+		function ConnectRks()
+		{			
+			// サーバーに接続
+			socket = io.connect();
+			
+			// メッセージ受信イベント（PVを受信）
+			socket.on('pv', function(data) 
+			{
+				$('#idPV').text(data);
+				$('#idReceived').prepend(data + '<br/>');		// デバッグ用に書き出し
+			});
+			
+		}
+		
+
+		// 運転または停止ボタンを押下で運転停止
+		function OperateRks(operation)
+		{
+			// 運転ボタンを押下
+			if (operation)	
+			{
+				alert("運転");
+			}
+			// 停止ボタンを押下
+			else		
+			{
+				alert("停止");
+			}
+		
+		}
+		
+		
+		function debug1()
+		{
+			$('#idPV').text("12.3");
+		}
+		
+		function debug2()
+		{
+		}
+		
+		function debug3()
+		{
+		}
+		/*
 		// send message
 		function sendSignal()
 		{
@@ -32,14 +75,30 @@
 			
 			socket.emit('msg', "andoooo");
 		}
+		*/
+		
 	</script>
 	<style type="text/css">
+	
 	</style>
 </head>
 
 <body>
-Hello World!<br>
-<button id="idON" onclick="sendSignal()"> sendSignal() </button><br>
+
+
+<p>測定温度<p>
+<div id="idPV">23.4</div>
+<br/><br/>
+
+<button id="idConnect" onclick="ConnectRks()">接続</button>
+<button id="idStart" onclick="OperateRks(true)">運転</button>
+<button id="idStop"onclick="OperateRks(false)">停止</button>
+
+<hr/>
+
+<button onclick="debug1()">debug1</button><br/>
+<button onclick="debug2()">debug2</button><br/>
+<button onclick="debug3()">debug3</button><br/>
 <div id="idReceived"></div>
 </body>
 

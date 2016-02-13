@@ -49,14 +49,36 @@ cli_socket.emit('abc', "thank you");
 	console.log('to client' + data);
   });
 });
-
+/*
+var tk_spawn = require("child_process").spawn;
+var tk_process = tk_spawn('python',["test.py"]);
+tk_process.stdout.on('data', function (data){
+	console.log(data);
+});
+*/
 
 var PythonShell = require('python-shell');
  
-PythonShell.run('test.py', function (err) 
-{
+var options = {
+
+  mode: 'text',
+ // pythonPath: 'F:\Program Files F\python2.7',
+  pythonOptions: ['-u'],
+  scriptPath: './',
+  args: ['value1', 'value2', 'value3']
+ 
+};
+
+ var pyshell = new PythonShell('test.py', options, function (err, results) {
   if (err) throw err;
-  console.log('finished');
+  // results is an array consisting of messages collected during execution 
+  console.log('results: %j', results);
+});
+
+
+pyshell.stdout.on('data', function(data) {
+    pyshell.send('go');
+    console.log("on." + data);
 });
 
 console.log('Server running!');

@@ -8,6 +8,10 @@ var spawn = require('child_process').spawn,
     data = [1,2,3,4,5,6,7,8,9],
     dataString = '';
 
+py.stdout.on('data', function(data){
+  console.log("on." + data);
+});
+
 var http_src = fs.readFileSync('./index.html');
 
 var app = http.createServer(function(req, res) {
@@ -32,16 +36,19 @@ var app = http.createServer(function(req, res) {
 
 var io = require('socket.io').listen(app);
 io.sockets.on('connection', function(socket) {
+	/*
 	socket.on('message', function(data) {		// messageイベント：すべてのメッセージを受信時
     //io.sockets.emit('msg', data);
 		socket.broadcast.emit('msg', data);
 		console.log("to server msg" + data);
 	});
+	*/
 	socket.on('abc', function(data) {
     //io.sockets.emit('msg', data);
 	//socket.broadcast.emit('msg', data);
 		console.log("to server abc" + data);
-		py.stdin.write("OKK");
+		py    = spawn('python', ['test.py']);
+		//py.stdin.write("OKK");
 //	py.stdin.end();
   });
 });
@@ -53,7 +60,7 @@ cli_socket.on('connect',function(socket){
  //   cli_socket.disconnect();
  //   process.exit(0);
 	cli_socket.on('msg', function(data) {
-		cli_socket.emit('abc', "thank you");
+		//cli_socket.emit('abc', "thank you");
 		console.log('to client' + data);
 	});
 });
@@ -92,9 +99,6 @@ pyshell.stdout.on('data', function(data) {
 */
 
 
-py.stdout.on('data', function(data){
-  console.log("on." + data);
-});
 //py.stdin.write(JSON.stringify(data));
 //py.stdin.end();
 

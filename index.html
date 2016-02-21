@@ -28,7 +28,7 @@
 			socket = io.connect();
 			
 			// メッセージ受信イベント（PVを受信）
-			socket.on('pv', function(data) 
+			socket.on('msg', function(data) 
 			{
 				$('#idPV').text(data);
 				$('#idReceived').prepend(data + '<br/>');		// デバッグ用に書き出し

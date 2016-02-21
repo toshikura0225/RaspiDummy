@@ -2,6 +2,7 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 
+
 var http_src = fs.readFileSync('./index.html');
 
 var app = http.createServer(function(req, res) {
@@ -26,7 +27,7 @@ var app = http.createServer(function(req, res) {
 
 var io = require('socket.io').listen(app);
 io.sockets.on('connection', function(socket) {
-  socket.on('msg', function(data) {
+  socket.on('message', function(data) {		// messageイベント：すべてのメッセージを受信時
     //io.sockets.emit('msg', data);
 	socket.broadcast.emit('msg', data);
 	console.log("to server msg" + data);
@@ -80,5 +81,21 @@ pyshell.stdout.on('data', function(data) {
     pyshell.send('go');
     console.log("on." + data);
 });
+
+
+// こんなものもある
+var spawn = require('child_process').spawn,
+    py    = spawn('python', ['test.py']),
+    data = [1,2,3,4,5,6,7,8,9],
+    dataString = '';
+
+py.stdout.on('data', function(data){
+  console.log("on." + data);
+});
+py.stdout.on('end', function(){
+  console.log('Sum of numbers=',dataString);
+});
+py.stdin.write(JSON.stringify(data));
+py.stdin.end();
 
 console.log('Server running!');

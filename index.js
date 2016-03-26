@@ -48,6 +48,10 @@ io.sockets.on('connection', function(socket) {
 	//socket.broadcast.emit('msg', data);
 		console.log("to server abc" + data);
 		py    = spawn('python', ['test.py']);
+		
+py.stdout.on('data', function(data){
+  console.log("on." + data);
+});
 		//py.stdin.write("OKK");
 //	py.stdin.end();
   });

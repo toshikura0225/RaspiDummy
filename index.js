@@ -20,6 +20,8 @@ var app = http.createServer(function(req, res) {
 	}
 	else
 	{
+		res.writeHead(404);
+		res.write(url_parts.pathname + "not found.");	// 脆弱性
 		res.end();
 	}
 
@@ -46,12 +48,17 @@ io.sockets.on('connection', function(socket) {
 		console.log("socket.io received 'abc' event and '" + data + "' message from html");
 		
 		// pythonを実行
-		var py = spawn('python', ['test.py']);
+		var py = spawn('python', ['test.py', 'my_arg']);
 		console.log("var py = spawn('python', ['test.py']);");
 		
 		// pythonからの受信イベントを登録
 		py.stdout.on('data', function(data){
 			console.log("py.stdout.on('data', ... " + data);
+		});
+		
+		// pythonからエラーイベントを受信時
+		py.stderr.on('data', function (data) {
+			console.log('stderr: ' + data);
 		});
 		
 		py.on('exit', function(){

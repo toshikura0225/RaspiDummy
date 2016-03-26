@@ -2,16 +2,8 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 
-// こんなものもある
-var spawn = require('child_process').spawn,
-    py    = spawn('python', ['test.py']),
-    data = [1,2,3,4,5,6,7,8,9],
-    dataString = '';
 
-py.stdout.on('data', function(data){
-  console.log("on." + data);
-});
-
+// ■■■■■■■■　Node.js　■■■■■■■■■
 var http_src = fs.readFileSync('./index.html');
 
 var app = http.createServer(function(req, res) {
@@ -20,7 +12,7 @@ var app = http.createServer(function(req, res) {
 	
 	console.log(url_parts.pathname);
 	
-	if(url_parts.pathname == '/')
+	if(url_parts.pathname == '/' || url_parts.pathname == '/index.html')
 	{
 		res.writeHead(200, {'Content-Type': 'text/html'});
 		res.write(http_src);
@@ -34,6 +26,7 @@ var app = http.createServer(function(req, res) {
 	
 }).listen(process.env.PORT || 3000);
 
+// ■■■■■■■■　socket.io（サーバー側）　■■■■■■■■■
 var io = require('socket.io').listen(app);
 io.sockets.on('connection', function(socket) {
 	/*
@@ -43,67 +36,32 @@ io.sockets.on('connection', function(socket) {
 		console.log("to server msg" + data);
 	});
 	*/
+	
+	// python実行のためのchild_processを作成
+	var spawn = require('child_process').spawn;
+	
 	socket.on('abc', function(data) {
-    //io.sockets.emit('msg', data);
-	//socket.broadcast.emit('msg', data);
-		console.log("to server abc" + data);
-		py    = spawn('python', ['test.py']);
 		
-py.stdout.on('data', function(data){
-  console.log("on." + data);
-});
-		//py.stdin.write("OKK");
-//	py.stdin.end();
-  });
+		console.log("to server abc 「" + data　+ "」");
+		
+		// pythonを実行
+		var py    = spawn('python', ['test.py']);
+		
+		// pythonからの受信イベントを登録
+		py.stdout.on('data', function(data){
+		  console.log("on." + data);
+		});
+	});
 });
 
+// ■■■■■■■■　socket.io-client（クライアント側）　■■■■■■■■■
 var client = require('socket.io-client');
 var cli_socket = client.connect('http://localhost:3000');
 cli_socket.on('connect',function(socket){
 	cli_socket.send('how are you?');
- //   cli_socket.disconnect();
- //   process.exit(0);
 	cli_socket.on('msg', function(data) {
 		//cli_socket.emit('abc', "thank you");
 		console.log('to client' + data);
 	});
 });
-/*
-var tk_spawn = require("child_process").spawn;
-var tk_process = tk_spawn('python',["test.py"]);
-tk_process.stdout.on('data', function (data){
-	console.log(data);
-});
-*/
-
-/*
-var PythonShell = require('python-shell');
- 
-var options = {
-
-  mode: 'text',
- // pythonPath: 'F:\Program Files F\python2.7',
-  pythonOptions: ['-u'],
-  scriptPath: './',
-  args: ['value1', 'value2', 'value3']
- 
-};
-
- var pyshell = new PythonShell('test.py', options, function (err, results) {
-  if (err) throw err;
-  // results is an array consisting of messages collected during execution 
-  console.log('results: %j', results);
-});
-
-
-pyshell.stdout.on('data', function(data) {
-    pyshell.send('go');
-    console.log("on." + data);
-});
-*/
-
-
-//py.stdin.write(JSON.stringify(data));
-//py.stdin.end();
-
 console.log('Server running!');

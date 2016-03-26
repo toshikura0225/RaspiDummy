@@ -42,14 +42,20 @@ io.sockets.on('connection', function(socket) {
 	
 	socket.on('abc', function(data) {
 		
-		console.log("to server abc 「" + data　+ "」");
+		console.log();
+		console.log("socket.io received 'abc' event and '" + data + "' message from html");
 		
 		// pythonを実行
-		var py    = spawn('python', ['test.py']);
+		var py = spawn('python', ['test.py']);
+		console.log("var py = spawn('python', ['test.py']);");
 		
 		// pythonからの受信イベントを登録
 		py.stdout.on('data', function(data){
-		  console.log("on." + data);
+			console.log("py.stdout.on('data', ... " + data);
+		});
+		
+		py.on('exit', function(){
+			console.log("exit event");
 		});
 	});
 });

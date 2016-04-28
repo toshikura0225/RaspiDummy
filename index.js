@@ -42,6 +42,30 @@ io.sockets.on('connection', function(socket) {
 	// python実行のためのchild_processを作成
 	var spawn = require('child_process').spawn;
 	
+	socket.on('path-through', function(data) {
+		
+		console.log();
+		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
+		
+		// pythonを実行
+		var py = spawn('python', ['zw.py', data]);
+		console.log("var py = spawn('python', ['zw.py', data]);");
+		
+		// pythonからの受信イベントを登録
+		py.stdout.on('data', function(data){
+			console.log("py.stdout.on('data', ... " + data);
+		});
+		
+		// pythonからエラーイベントを受信時
+		py.stderr.on('data', function (data) {
+			console.log('stderr: ' + data);
+		});
+		
+		py.on('exit', function(){
+			console.log("exit event");
+		});
+	});
+	
 	socket.on('abc', function(data) {
 		
 		console.log();
@@ -65,6 +89,8 @@ io.sockets.on('connection', function(socket) {
 			console.log("exit event");
 		});
 	});
+	
+	
 });
 
 // ■■■■■■■■　socket.io-client（クライアント側）　■■■■■■■■■

@@ -56,12 +56,12 @@
 		
 		function debug1()
 		{
-			$('#idPV').text("12.3");
+			socket.emit('path-through', 'star');
 		}
 		
 		function debug2()
 		{
-			socket.emit('abc', 'star');
+			$('#idPV').text("12.3");
 		}
 		
 		function debug3()
@@ -97,8 +97,8 @@
 
 <hr/>
 
-<p>「接続」ボタンを押してから「debug2」ボタンを押すとnode.jsにメッセージが送られ、node.js側でpythonコードが実行される</p>
-<button onclick="debug1()">debug1</button><br/>
+<p>「接続」ボタンを押してから「ZW」ボタンを押すとnode.jsにメッセージが送られ、node.js側でpythonコードが実行される</p>
+<button onclick="debug1()">ZW</button><br/>
 <button onclick="debug2()">debug2</button><br/>
 <button onclick="debug3()">debug3</button><br/>
 <div id="idReceived"></div>

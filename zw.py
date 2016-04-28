@@ -1,18 +1,21 @@
-# header comment
+#! /usr/bin/python
+# -*- coding: utf-8 -*- 
+
+import sys
 
 from serial import Serial
 #import webiopi
 import time
 #import numpy as np
 
+print "load"
+
 
 def forDebug( *sendData ):
 	print ','.join(str(n) for n in sendData)
 	
 def serialWrite( *sendData ):
-	webiopi.setDebug()
-	webiopi.debug("####################")
-	
+
 	#ttyACM0
 	com = Serial(
 		port="/dev/ttyACM0",
@@ -25,9 +28,7 @@ def serialWrite( *sendData ):
 		rtscts=0,
 		writeTimeout=1000,
 		dsrdtr=None)
-	#print(com.portstr)
-	webiopi.debug(sendData)
-	webiopi.debug(com.portstr)
+		
 	time.sleep(2)
 	for bt in sendData:
 		#com.write(str(bt).encode())
@@ -42,7 +43,6 @@ def serialWrite( *sendData ):
 	
 	readData = com.read(1000)
 	#print(len(readData))
-	webiopi.debug(len(readData))
 	
 	com.close()
 	
@@ -51,7 +51,6 @@ def serialWrite( *sendData ):
 	#	print("%s" % str(var))
 	#	f.write("var=" + str(var))
 	#f.close()
-	webiopi.debug(sendData)
 	#return [10, 20, 30, 40, 50]
 	#return readData
 	#return ','.join(str(n) for n in readData)
@@ -62,14 +61,9 @@ def serialWrite( *sendData ):
 	#return np.array(readData)
 	#return 123
 
-#abc = [10, 20, 30, 40, 50]
-#serialWrite(abc)
-
 if __name__ == "__main__":
-
-	print "send ZW"
-	#serialWrite()
-	
-	#[EOT]00ZW[ENQ]
-	list = [4, 48, 48, 90, 87, 5]
-	forDebug(list)
+	print "main method argument is..."
+	argvs = sys.argv
+	print argvs
+	forDebug(argvs)
+# header comment

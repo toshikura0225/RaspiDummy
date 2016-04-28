@@ -56,7 +56,11 @@
 		
 		function debug1()
 		{
-			socket.emit('path-through', 'star');
+		// 配列形式で送信する
+			var url = [4, 48, 48, 90, 90, 5];
+			
+			socket.emit('path-through', url);
+			
 		}
 		
 		function debug2()

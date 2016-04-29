@@ -8,11 +8,12 @@ from serial import Serial
 import time
 #import numpy as np
 
-print "load"
+#print "load"
 
 
 def forDebug( *sendData ):
-	print ','.join(str(n) for n in sendData)
+	#print ','.join(str(n) for n in sendData)
+	print [90, 91, 92]
 	
 def serialWrite( *sendData ):
 
@@ -62,8 +63,8 @@ def serialWrite( *sendData ):
 	#return 123
 
 if __name__ == "__main__":
-	print "main method argument is..."
+	#print "main method argument is..."
 	argvs = sys.argv
-	print argvs
+	#print argvs
 	forDebug(argvs)
 # header comment

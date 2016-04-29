@@ -54,6 +54,8 @@ io.sockets.on('connection', function(socket) {
 		// pythonからの受信イベントを登録
 		py.stdout.on('data', function(data){
 			console.log("py.stdout.on('data', ... " + data);
+			//socket.broadcast.emit('response', data);
+			socket.emit('response', data);
 		});
 		
 		// pythonからエラーイベントを受信時

@@ -34,6 +34,9 @@ var sp;
 // ■■■■■■■■　socket.io（サーバー側）　■■■■■■■■■
 var io = require('socket.io').listen(app);
 io.sockets.on('connection', function(socket) {
+	
+	// なぜか.htmlにアクセス時に'connection'イベントが発生することがある
+	
 	/*
 	socket.on('message', function(data) {		// messageイベント：すべてのメッセージを受信時
     //io.sockets.emit('msg', data);
@@ -41,6 +44,8 @@ io.sockets.on('connection', function(socket) {
 		console.log("to server msg" + data);
 	});
 	*/
+	
+	console.log("socket.io connected.");
 	
 	socket.on('open-connection', function(data) {
 		
@@ -57,6 +62,14 @@ io.sockets.on('connection', function(socket) {
 		sp.on('data', function(recv) {
 			console.log('recv:' + recv);
 		});
+		
+		
+		// list serial ports:
+		serialport.list(function (err, ports) {
+			ports.forEach(function(port) {
+				console.log(port.comName);
+			});
+		})
 		
 	});	
 			

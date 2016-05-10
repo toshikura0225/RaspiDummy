@@ -29,6 +29,8 @@ var app = http.createServer(function(req, res) {
 	
 }).listen(process.env.PORT || 3000);
 
+var sp;
+
 // ■■■■■■■■　socket.io（サーバー側）　■■■■■■■■■
 var io = require('socket.io').listen(app);
 io.sockets.on('connection', function(socket) {
@@ -40,12 +42,11 @@ io.sockets.on('connection', function(socket) {
 	});
 	*/
 	
-	socket.on('path-through', function(data) {
+	socket.on('open-connection', function(data) {
 		
-		console.log();
-		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
+		console.log("socket.io received 'open-connection' event and '" + data + "' message from html");
 		
-		var sp = new serialport.SerialPort('COM38', {
+		sp = new serialport.SerialPort(data, {
 			baudRate: 38400,
 			dataBits: 8,
 			parity: 'none',
@@ -55,6 +56,18 @@ io.sockets.on('connection', function(socket) {
 		
 		sp.on('data', function(recv) {
 			console.log('recv:' + recv);
+		});
+		
+	});	
+			
+	socket.on('path-through', function(data) {
+		
+		console.log();
+		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
+	
+
+		sp.write("OK", function(err, results) {
+			console.log(err + "  " + results);
 		});
 	});
 	

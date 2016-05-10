@@ -39,36 +39,19 @@
 			
 		}
 		
-
-		// 運転または停止ボタンを押下で運転停止
-		function OperateRks(operation)
-		{
-			// 運転ボタンを押下
-			if (operation)	
-			{
-				alert("運転");
-			}
-			// 停止ボタンを押下
-			else		
-			{
-				alert("停止");
-			}
-		
-		}
-		
+	
 		
 		function debug1()
 		{
-		// 配列形式で送信する
-			var url = [4, 48, 48, 90, 90, 5];
-			
-			socket.emit('path-through', url);
-			
+			socket.emit('open-connection', "COM38");
 		}
 		
 		function debug2()
 		{
-			$('#idPV').text("12.3");
+			// 配列形式で送信する
+			var url = [4, 48, 48, 90, 90, 5];
+			
+			socket.emit('path-through', url);
 		}
 		
 		function debug3()
@@ -98,15 +81,14 @@
 <div id="idPV">23.4</div>
 <br/><br/>
 
+<p>「接続」→「Open SerialPort」→「write」</p>
+
 <button id="idConnect" onclick="ConnectRks()">接続</button>
-<button id="idStart" onclick="OperateRks(true)">運転</button>
-<button id="idStop"onclick="OperateRks(false)">停止</button>
 
 <hr/>
 
-<p>「接続」ボタンを押してから「ZW」ボタンを押すとnode.jsにメッセージが送られ、node.js側でpythonコードが実行される</p>
-<button onclick="debug1()">ZW</button><br/>
-<button onclick="debug2()">debug2</button><br/>
+<button onclick="debug1()">Open SerialPort</button><br/>
+<button onclick="debug2()">write()</button><br/>
 <button onclick="debug3()">debug3</button><br/>
 <div id="idReceived"></div>
 </body>

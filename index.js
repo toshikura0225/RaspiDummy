@@ -1,6 +1,7 @@
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
+var serialport = require('serialport');
 
 
 // ■■■■■■■■　Node.js　■■■■■■■■■
@@ -39,10 +40,30 @@ io.sockets.on('connection', function(socket) {
 	});
 	*/
 	
+	socket.on('path-through', function(data) {
+		
+		console.log();
+		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
+		
+		var sp = new serialport.SerialPort('COM38', {
+			baudRate: 38400,
+			dataBits: 8,
+			parity: 'none',
+			stopBits: 1,
+			flowControl: true,
+		});
+		
+		sp.on('data', function(recv) {
+			console.log('recv:' + recv);
+		});
+	});
+	
+	
+	
 	// python実行のためのchild_processを作成
 	var spawn = require('child_process').spawn;
 	
-	socket.on('path-through', function(data) {
+	socket.on('old_path-through', function(data) {
 		
 		console.log();
 		console.log("socket.io received 'path-through' event and '" + data + "' message from html");

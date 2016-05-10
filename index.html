@@ -43,7 +43,7 @@
 		
 		function debug1()
 		{
-			socket.emit('open-connection', "COM38");
+			socket.emit('open-connection', $('#idPortName').val());
 		}
 		
 		function debug2()
@@ -79,6 +79,7 @@
 
 <p>測定温度<p>
 <div id="idPV">23.4</div>
+<input type="text" size="20" id="idPortName"/>
 <br/><br/>
 
 <p>「接続」→「Open SerialPort」→「write」</p>

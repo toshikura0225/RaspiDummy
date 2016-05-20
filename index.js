@@ -78,13 +78,21 @@ io.sockets.on('connection', function(socket) {
 		console.log();
 		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
 	
-
-		sp.write("OK", function(err, results) {
-			console.log(err + "  " + results);
+		sp.write(data, function(err, results) {
+			if (! err) {	// エラーなし
+				console.log(results + ' bytes written');
+			} else {		// エラーあり
+				console.log("error : " + err + "  " + results);
+			}
 		});
 	});
 	
 	
+	
+	
+	
+	
+	// ～～～～～　OLDコード　～～～～～
 	
 	// python実行のためのchild_processを作成
 	var spawn = require('child_process').spawn;

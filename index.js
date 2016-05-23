@@ -67,7 +67,19 @@ io.sockets.on('connection', function(socket) {
 		// 受信イベントハンドラを定義
 		sp.on('data', function(recv) {
 			console.log('recv:' + recv);
-			socket.emit('response', recv);
+			
+			// 受信データをファイルに書き出し
+			fs.appendFile('zw.csv', recv, 'utf8', function(err) {
+				if(! err) {
+					fs.appendFileSync('zw.csv', '\n', 'utf8');
+				} else {
+					console.log('recv_err:' + err);					
+				}
+			});
+			
+			// 受信データをHTMLへ送信
+			socket.emit('response', recv);	
+			
 		});
 		
 	});	

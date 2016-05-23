@@ -22,8 +22,7 @@
 		});
 		
 		// ①RKSに接続
-		function ConnectRks()
-		{			
+		function ConnectRks() {			
 			// サーバーに接続
 			socket = io.connect();
 			
@@ -41,21 +40,29 @@
 		
 	
 		
-		function debug1()
-		{
+		function debug1() {
 			socket.emit('open-connection', $('#idPortName').val());
 		}
 		
-		function debug2()
-		{
+		function debug2() {
 			// 配列形式で送信する
 			var url = [4, 48, 48, 90, 87, 5];
 			
 			socket.emit('path-through', url);
 		}
 		
-		function debug3()
-		{
+		var my_interval;
+		
+		function debug3() {
+			
+			my_interval = setInterval(function() {
+				debug2();
+			}, 3000);
+			
+			
+		}
+		function debug4() {
+			clearInterval(my_interval);
 		}
 		/*
 		// send message
@@ -90,7 +97,8 @@
 
 <button onclick="debug1()">Open SerialPort</button><br/>
 <button onclick="debug2()">write()</button><br/>
-<button onclick="debug3()">debug3</button><br/>
+<button onclick="debug3()">start()</button><br/>
+<button onclick="debug4()">stop()</button><br/>
 <div id="idReceived"></div>
 </body>
 

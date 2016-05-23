@@ -61,6 +61,7 @@ io.sockets.on('connection', function(socket) {
 		
 		sp.on('data', function(recv) {
 			console.log('recv:' + recv);
+			socket.emit('response', recv);
 		});
 		
 	});	

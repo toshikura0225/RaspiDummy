@@ -30,11 +30,11 @@
 			// メッセージ受信イベント（PVを受信）
 			socket.on('response', function(data) 
 			{
-				var a = data[0];
+				//var a = data[0];
 				//var b = String.fromCharCode.apply("", new Uint8Array(data));
-				var b = new Uint8Array(data);
-				$('#idPV').text(b);
-				$('#idReceived').prepend(data + '<br/>');		// デバッグ用に書き出し
+				var arr_data = new Uint8Array(data);
+				//$('#idPV').text(b);
+				$('#idReceived').prepend(arr_data + '<br/>');		// デバッグ用に書き出し
 			});
 			
 		}

@@ -5,20 +5,24 @@ var serialport = require('serialport');
 
 
 // ■■■■■■■■　Node.js　■■■■■■■■■
-var http_src = fs.readFileSync('./index.html');
+var http_src = fs.readFileSync('./index.html');		// HTMLファイルのソースを同期処理で読み出す
 
+// HTTPサーバーを作成
 var app = http.createServer(function(req, res) {
 	
+	// リクエストされたURLを取得
 	var url_parts = url.parse(req.url);
-	
 	console.log(url_parts.pathname);
 	
+	// ルートまたはindex.htmlの場合
 	if(url_parts.pathname == '/' || url_parts.pathname == '/index.html')
 	{
 		res.writeHead(200, {'Content-Type': 'text/html'});
 		res.write(http_src);
 		res.end();
 	}
+	
+	// その他のファイルは404コードを返答する
 	else
 	{
 		res.writeHead(404);
@@ -26,16 +30,17 @@ var app = http.createServer(function(req, res) {
 		res.end();
 	}
 
-	
-}).listen(process.env.PORT || 3000);
+}).listen(process.env.PORT || 3000);	// サーバー内環境のポートまたは3000番で待受
 
+// シリアルポートのインスタンス
 var sp;
 
 // ■■■■■■■■　socket.io（サーバー側）　■■■■■■■■■
 var io = require('socket.io').listen(app);
 io.sockets.on('connection', function(socket) {
 	
-	// なぜか.htmlにアクセス時に'connection'イベントが発生することがある
+	// なぜか.htmlにアクセス時に'connection'イベントが発生する（原因不明）
+	console.log("socket.io connected.");
 	
 	/*
 	socket.on('message', function(data) {		// messageイベント：すべてのメッセージを受信時
@@ -45,12 +50,12 @@ io.sockets.on('connection', function(socket) {
 	});
 	*/
 	
-	console.log("socket.io connected.");
-	
+	// 接続開始時のイベントハンドラを定義
 	socket.on('open-connection', function(data) {
 		
 		console.log("socket.io received 'open-connection' event and '" + data + "' message from html");
 		
+		// シリアルポートのインスタンスを作成する
 		sp = new serialport.SerialPort(data, {
 			baudRate: 38400,
 			dataBits: 8,
@@ -59,18 +64,21 @@ io.sockets.on('connection', function(socket) {
 			flowControl: true,
 		});
 		
+		// 受信イベントハンドラを定義
 		sp.on('data', function(recv) {
 			console.log('recv:' + recv);
 			socket.emit('response', recv);
 		});
 		
 	});	
-			
+	
+	// クライアントからシリアルデータの送信要求イベントに対するハンドラ
 	socket.on('path-through', function(data) {
 		
 		console.log();
 		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
-	
+		
+		// シリアルデータを送信
 		sp.write(data, function(err, results) {
 			if (! err) {	// エラーなし
 				console.log(results + ' bytes written');
@@ -80,9 +88,8 @@ io.sockets.on('connection', function(socket) {
 		});
 	});
 	
-	
 			
-	// list serial ports:
+	// 使用可能なCOMポートを書き出す
 	serialport.list(function (err, ports) {
 		ports.forEach(function(port) {
 			console.log(port.comName);

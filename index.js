@@ -63,14 +63,6 @@ io.sockets.on('connection', function(socket) {
 			console.log('recv:' + recv);
 		});
 		
-		
-		// list serial ports:
-		serialport.list(function (err, ports) {
-			ports.forEach(function(port) {
-				console.log(port.comName);
-			});
-		})
-		
 	});	
 			
 	socket.on('path-through', function(data) {
@@ -88,7 +80,13 @@ io.sockets.on('connection', function(socket) {
 	});
 	
 	
-	
+			
+	// list serial ports:
+	serialport.list(function (err, ports) {
+		ports.forEach(function(port) {
+			console.log(port.comName);
+		});
+	})
 	
 	
 	
